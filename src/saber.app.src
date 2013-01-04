@@ -1,0 +1,12 @@
+{application, saber,
+ [
+  {description, "Simple AB testing for Erlang"},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { saber_app, ["test/test.abtests"]}},
+  {env, []}
+ ]}.

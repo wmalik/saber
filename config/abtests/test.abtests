@@ -1,0 +1,51 @@
+[{abtests,
+    [{diamonds_test,
+        [
+            {modulo, 10},
+            {test_groups, [1,4,7]},
+            {test_users, [613199498, 1122]},
+            {test_value, 200},
+            {default_value, 110}
+        ]
+    },
+    {coins_test,
+        [
+            {modulo, 19},
+            {test_groups, [3,4,7]},
+            {test_users, [613199498, 1122]},
+            {test_value, 3434200},
+            {default_value, 343110}
+        ]
+    },
+    {lives_test,
+        [
+            {modulo, 19},
+            {test_groups, [3,4,7]},
+            {test_users, [613199498, 1122]},
+            {test_value, [{amount, 3434200}, {color, red}]},
+            {default_value, 343110}
+        ]
+    },
+    {mystery_test,
+        [
+            {modulo, 10},
+            {test_groups, [0,1,2,3,4]},
+            {test_users, [613199498, 6667080866659356407]},
+            {test_value, [
+                {mystery_active, true}
+            ]},
+            {default_value, [
+                {mystery_active, false}
+            ]}
+        ]
+    },
+    {client_feature_test,
+        [
+            {modulo, 10},
+            {test_groups, [0,1,2,3,4]},
+            {test_users, [666, 777]},
+            {test_value, <<"358120a217b17a4656dbc01e62fb7a37251d8585">>},
+            {default_value, <<"d0e8a26ad04ce44b00edfbfd2ef094bc7422a569">>}
+        ]
+    }
+]}].
