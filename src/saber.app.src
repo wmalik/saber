@@ -1,12 +1,12 @@
 {application, saber,
  [
-  {description, "Simple AB testing for Erlang"},
+  {description, "Simple AB testing manager for Erlang"},
   {vsn, "1"},
   {registered, []},
   {applications, [
                   kernel,
                   stdlib
                  ]},
-  {mod, { saber_app, ["test/test.abtests"]}},
+  {mod, { saber_app, ["config/conf.abtests"]}},
   {env, []}
  ]}.

@@ -76,15 +76,16 @@ test_get_conf() ->
 
 test_reload() ->
     % if we reload saber with a new configfile
-    saber_api:reload("test/test_small.abtests"),
+    saber_api:reload("test/sample_small.abtests"),
 
     %.. then the new changes should be visible from the API
     Tests111 = saber_api:get_all_values(111),
     ?assert_equal(false, proplists:is_defined(client_feature_test, Tests111)),
     ?assert_equal(false, proplists:is_defined(diamonds_test, Tests111)),
+    ?assert_equal(true, proplists:is_defined(integ_test, Tests111)),
 
     %% CLEANUP
-    saber_api:reload("test/test.abtests").
+    saber_api:reload("config/conf.abtests").
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
