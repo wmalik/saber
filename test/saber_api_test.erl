@@ -4,8 +4,7 @@
 -include_lib ("etest_http/include/etest_http.hrl").
 
 before_suite() ->
-    application:start(saber),
-    ok.
+    application:start(saber).
 
 before_test() ->
     nothing.
@@ -14,8 +13,7 @@ after_test() ->
     nothing.
 
 after_suite() ->
-    application:stop(saber),
-    ok.
+    application:stop(saber).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -49,9 +47,16 @@ test_get_all_values() -> % validates the response of saber:get_all_values/1
     ?assert_equal(true, proplists:get_value(<<"testgroup">>, R666)).
 
 test_get_value() ->
+    % if a test exists in the configuration file..
     Tests111 = saber_api:get_value(111, integ_test),
+    % .. the response should be in the correct format
     ?assert_equal(true, proplists:get_value(<<"testgroup">>, Tests111)),
-    ?assert_equal("something", proplists:get_value(<<"value">>, Tests111)).
+    ?assert_equal("something", proplists:get_value(<<"value">>, Tests111)),
+
+    % if its some nonexistent test..
+    Test222 = saber_api:get_value(222, some_nonexistent_test),
+    % .. abtest_undefined should be returned
+    ?assert_equal(abtest_undefined, Test222).
 
 test_get_all_conf() ->
     AllConf = saber_api:get_all_conf(),

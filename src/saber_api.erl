@@ -22,6 +22,10 @@
 
 -record(state, {}).
 
+% The response format of an evaluated AB test
+-define(RESP_FORMAT(TestGroup, Value),
+            [{<<"testgroup">>, TestGroup}, {<<"value">>, Value}]).
+
 %%%===================================================================
 %%% API
 %%%===================================================================
@@ -36,13 +40,22 @@ start_link(ConfigFilePath) ->
 get_all_values(UserId) when is_integer(UserId) -> %evaluated values
     eval_all_abtests(UserId).
 
-% Returns the evaluated value for an AB test key
+% Returns the evaluated value for an AB test key. If the key does not exist, it
+% returns abtest_undefined
 get_value(UserId, Key) when is_integer(UserId) ->
-    % fetch the config of a specific AB test
-    ABTestConf = ets:lookup_element(?CONF_TABLE, Key, 2),
-    % Evaluate the AB test config
-    {TestGroup, Value} = eval_abtest(UserId, ABTestConf),
-    [{<<"testgroup">>, TestGroup}, {<<"value">>, Value}].
+    try
+        % fetch the config of a specific AB test
+        ABTestConf = case catch( ets:lookup_element(?CONF_TABLE, Key, 2) ) of
+            A = [{_,_}|_] -> A;
+            _             -> throw(abtest_undefined)
+        end,
+
+        % Evaluate the AB test config
+        {TestGroup, Value} = eval_abtest(UserId, ABTestConf),
+        ?RESP_FORMAT(TestGroup, Value)
+    catch
+        abtest_undefined -> abtest_undefined
+    end.
 
 % Returns un-evaluated AB test conf
 get_all_conf() ->
@@ -134,7 +147,7 @@ eval_all_abtests(UserId) ->
 
     Step = fun({ABTestName,ABTestConf}, Acc) ->
              {TestGroup, Value} = eval_abtest(UserId, ABTestConf),
-             TestJson = [{<<"testgroup">>, TestGroup}, {<<"value">>, Value}],
+             TestJson = ?RESP_FORMAT(TestGroup, Value),
              lists:append([{ABTestName, TestJson}], Acc)
     end,
     lists:foldl(Step, [], ABTests).
