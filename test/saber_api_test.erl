@@ -58,6 +58,13 @@ test_get_value() ->
     % .. abtest_undefined should be returned
     ?assert_equal(abtest_undefined, Test222).
 
+test_get_value_for_an_expired_abtest() ->
+    % if a test has expired
+    Tests111 = saber_api:get_value(111, expired_test),
+    % .. the response should be the default value even if the user falls in the
+    % test group
+    ?assert_equal("something_else", proplists:get_value(<<"value">>, Tests111)).
+
 test_get_all_conf() ->
     AllConf = saber_api:get_all_conf(),
     ?assert_equal(true, proplists:is_defined(client_feature_test, AllConf)),
@@ -80,7 +87,8 @@ test_get_conf() ->
     ?assert_equal(true, proplists:is_defined(default_value, Tests111)).
 
 test_reload() ->
-    % if we reload saber with a new configfile
+    % if we reload saber with a new configfile which doesnt have
+    % client_feature_test and diamonds_test
     saber_api:reload("test/sample_small.abtests"),
 
     %.. then the new changes should be visible from the API

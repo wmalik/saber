@@ -8,6 +8,7 @@
             {default_value, 110}
         ]
     },
+
     {client_feature_test,
         [
             {modulo, 10},
@@ -17,6 +18,7 @@
             {default_value, <<"d0e8a26ad04ce44b00edfbfd2ef094bc7422a569">>}
         ]
     },
+
     {integ_test,
         [
             {modulo, 10},
@@ -24,6 +26,17 @@
             {test_users, [666, 777]},
             {test_value, "something"},
             {default_value, "something_else"}
+        ]
+    },
+
+    {expired_test,
+        [
+            {modulo, 10},
+            {test_groups, [0,1]},
+            {test_users, [666, 777]},
+            {test_value, "something"},
+            {default_value, "something_else"},
+            {end_time, 489110400} % year 1985
         ]
     }
 ]}].

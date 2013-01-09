@@ -4,7 +4,8 @@
             {test_groups, [0,1]},
             {test_users, [666, 777]},
             {test_value, "something"},
-            {default_value, "something_else"}
+            {default_value, "something_else"},
+            {end_time, -1}
         ]
     }
 ]}].

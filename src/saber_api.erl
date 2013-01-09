@@ -19,6 +19,10 @@
 
 -define(SERVER, ?MODULE).
 -define(CONF_TABLE, saber_conf).
+-define ( UNIX_TIME_IN_GREGORIAN,
+    calendar:datetime_to_gregorian_seconds({{1970,1,1},{0,0,0}})).
+
+
 
 -record(state, {}).
 
@@ -159,10 +163,13 @@ eval_abtest(UserId, ABTestConf) ->
     WhiteList  = proplists:get_value(test_users, ABTestConf),
     TestVal    = proplists:get_value(test_value, ABTestConf),
     DefaultVal = proplists:get_value(default_value, ABTestConf),
+    EndTime    = proplists:get_value(end_time, ABTestConf, undefined),
 
-    case is_test_user(Modulo, TestGroups, WhiteList, UserId) of
-        true  -> {true,  TestVal};
-        false -> {false, DefaultVal}
+    case is_test_user(Modulo, TestGroups, WhiteList, UserId)
+         andalso
+         is_test_active(EndTime) of
+             true  -> {true,  TestVal};
+             false -> {false, DefaultVal}
     end.
 
 % Check whether the UserId is part of a test group. Returns boolean
@@ -170,3 +177,14 @@ is_test_user(Modulo, RemainderList, WhiteList, UserId) ->
     lists:member(UserId rem Modulo, RemainderList)
     or
     lists:member(UserId, WhiteList).
+
+%TODO, add to test conf also end_time
+is_test_active(undefined) ->
+    true;
+is_test_active(EndTime) ->
+    EndTime > unix_time().
+
+unix_time() ->
+    calendar:datetime_to_gregorian_seconds(
+        calendar:now_to_universal_time(os:timestamp())
+    ) - ?UNIX_TIME_IN_GREGORIAN.
