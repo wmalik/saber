@@ -27,8 +27,11 @@
 -record(state, {}).
 
 % The response format of an evaluated AB test
--define(RESP_FORMAT(TestGroup, Value),
-            [{<<"testgroup">>, TestGroup}, {<<"value">>, Value}]).
+-define(RESP_FORMAT(TestGroup, Value, Version), [
+            {<<"testgroup">>, TestGroup},
+            {<<"value">>, Value},
+            {<<"version">>, Version}
+       ]).
 
 %%%===================================================================
 %%% API
@@ -55,8 +58,8 @@ get_value(UserId, Key) when is_integer(UserId) ->
         end,
 
         % Evaluate the AB test config
-        {TestGroup, Value} = eval_abtest(UserId, ABTestConf),
-        ?RESP_FORMAT(TestGroup, Value)
+        {TestGroup, Value, Version} = eval_abtest(UserId, ABTestConf),
+        ?RESP_FORMAT(TestGroup, Value, Version)
     catch
         abtest_undefined -> abtest_undefined
     end.
@@ -150,8 +153,8 @@ eval_all_abtests(UserId) ->
     ABTests = get_ets_tuples(),
 
     Step = fun({ABTestName,ABTestConf}, Acc) ->
-             {TestGroup, Value} = eval_abtest(UserId, ABTestConf),
-             TestJson = ?RESP_FORMAT(TestGroup, Value),
+             {TestGroup, Value, Version} = eval_abtest(UserId, ABTestConf),
+             TestJson = ?RESP_FORMAT(TestGroup, Value, Version),
              lists:append([{ABTestName, TestJson}], Acc)
     end,
     lists:foldl(Step, [], ABTests).
@@ -164,12 +167,13 @@ eval_abtest(UserId, ABTestConf) ->
     TestVal    = proplists:get_value(test_value, ABTestConf),
     DefaultVal = proplists:get_value(default_value, ABTestConf),
     EndTime    = proplists:get_value(end_time, ABTestConf, undefined),
+    Version    = proplists:get_value(version, ABTestConf, undefined),
 
     case is_test_user(Modulo, TestGroups, WhiteList, UserId)
          andalso
          is_test_active(EndTime) of
-             true  -> {true,  TestVal};
-             false -> {false, DefaultVal}
+             true  -> {_TestGroup = true,  TestVal, Version};
+             false -> {_TestGroup = false, DefaultVal, Version}
     end.
 
 % Check whether the UserId is part of a test group. Returns boolean

@@ -29,6 +29,7 @@ test_get_all_values() -> % validates the response of saber:get_all_values/1
     R111 = proplists:get_value(integ_test, Tests111),
     ?assert_equal("something", proplists:get_value(<<"value">>, R111)),
     ?assert_equal(true, proplists:get_value(<<"testgroup">>, R111)),
+    ?assert_equal(1, proplists:get_value(<<"version">>, R111)),
 
     Tests333 = saber_api:get_all_values(333),
     ?assert_equal(true, proplists:is_defined(client_feature_test, Tests333)),
@@ -37,6 +38,7 @@ test_get_all_values() -> % validates the response of saber:get_all_values/1
     R333 = proplists:get_value(integ_test, Tests333),
     ?assert_equal("something_else", proplists:get_value(<<"value">>, R333)),
     ?assert_equal(false, proplists:get_value(<<"testgroup">>, R333)),
+    ?assert_equal(1, proplists:get_value(<<"version">>, R333)),
 
     Tests666 = saber_api:get_all_values(666),
     ?assert_equal(true, proplists:is_defined(client_feature_test, Tests666)),
@@ -44,7 +46,8 @@ test_get_all_values() -> % validates the response of saber:get_all_values/1
     ?assert_equal(true, proplists:is_defined(integ_test, Tests666)),
     R666 = proplists:get_value(integ_test, Tests666),
     ?assert_equal("something", proplists:get_value(<<"value">>, R666)),
-    ?assert_equal(true, proplists:get_value(<<"testgroup">>, R666)).
+    ?assert_equal(true, proplists:get_value(<<"testgroup">>, R666)),
+    ?assert_equal(1, proplists:get_value(<<"version">>, R666)).
 
 test_get_value() ->
     % if a test exists in the configuration file..
@@ -52,9 +55,11 @@ test_get_value() ->
     % .. the response should be in the correct format
     ?assert_equal(true, proplists:get_value(<<"testgroup">>, Tests111)),
     ?assert_equal("something", proplists:get_value(<<"value">>, Tests111)),
+    ?assert_equal(1, proplists:get_value(<<"version">>, Tests111)),
 
     % if its some nonexistent test..
     Test222 = saber_api:get_value(222, some_nonexistent_test),
+
     % .. abtest_undefined should be returned
     ?assert_equal(abtest_undefined, Test222).
 

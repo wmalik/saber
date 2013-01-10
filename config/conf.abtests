@@ -14,13 +14,14 @@
             {modulo, 10},
             {test_groups, [0,1,2,3,4]},
             {test_users, [666, 777]},
-            {test_value, <<"358120a217b17a4656dbc01e62fb7a37251d8585">>},
-            {default_value, <<"d0e8a26ad04ce44b00edfbfd2ef094bc7422a569">>}
+            {test_value, <<"251d">>},
+            {default_value, <<"ce44">>}
         ]
     },
 
     {integ_test,
         [
+            {version, 1},
             {modulo, 10},
             {test_groups, [0,1]},
             {test_users, [666, 777]},
