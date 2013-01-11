@@ -1,14 +1,4 @@
-[{abtests,
-    [{diamonds_test,
-        [
-            {modulo, 10},
-            {test_groups, [1,4,7]},
-            {test_users, [613199498, 1122]},
-            {test_value, 200},
-            {default_value, 110}
-        ]
-    },
-
+[{abtests, [
     {client_feature_test,
         [
             {modulo, 10},
@@ -39,5 +29,17 @@
             {default_value, "something_else"},
             {end_time, 489110400} % year 1985
         ]
+    },
+
+    {no_version,
+        [
+            {modulo, 10},
+            {test_groups, [0,1]},
+            {test_users, [666, 777]},
+            {test_value, "something"},
+            {default_value, "something_else"},
+            {end_time, 489110400} % year 1985
+        ]
     }
+
 ]}].

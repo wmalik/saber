@@ -167,7 +167,7 @@ eval_abtest(UserId, ABTestConf) ->
     TestVal    = proplists:get_value(test_value, ABTestConf),
     DefaultVal = proplists:get_value(default_value, ABTestConf),
     EndTime    = proplists:get_value(end_time, ABTestConf, undefined),
-    Version    = proplists:get_value(version, ABTestConf, undefined),
+    Version    = proplists:get_value(version, ABTestConf, -1),
 
     case is_test_user(Modulo, TestGroups, WhiteList, UserId)
          andalso
@@ -182,7 +182,6 @@ is_test_user(Modulo, RemainderList, WhiteList, UserId) ->
     or
     lists:member(UserId, WhiteList).
 
-%TODO, add to test conf also end_time
 is_test_active(undefined) ->
     true;
 is_test_active(EndTime) ->
