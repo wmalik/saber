@@ -73,6 +73,14 @@ test_get_value_for_an_expired_abtest() ->
     % test group
     ?assert_equal("something_else", proplists:get_value(<<"value">>, Tests111)).
 
+test_get_value_for_test_with_no_test_group() ->
+    Tests111 = saber_api:get_value(111, no_groups),
+    ?assert_equal("something_else", proplists:get_value(<<"value">>, Tests111)),
+
+    Tests222 = saber_api:get_value(666, no_groups),
+    ?assert_equal("something", proplists:get_value(<<"value">>, Tests222)).
+
+
 test_get_all_conf() ->
     AllConf = saber_api:get_all_conf(),
     ?assert_equal(true, proplists:is_defined(client_feature_test, AllConf)),
